@@ -1,10 +1,11 @@
 # grocery_list_app
 
-A new Flutter project.
+A Grocery list app with Firebase Authentication for login through Email and password, Cloud Firestore for storing the data.
+<br> 
+The app allows us to create any kind of lists and store it on the Firebase database and gives the list on the app in real time.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
 
