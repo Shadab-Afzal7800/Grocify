@@ -16,6 +16,7 @@ TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 
 class _LoginState extends State<Login> {
+  bool passwordVisible = true;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -67,11 +68,21 @@ class _LoginState extends State<Login> {
                 padding: const EdgeInsets.all(20.0),
                 child: TextFormField(
                     controller: passwordController,
-                    decoration: const InputDecoration(
+                    obscureText: passwordVisible,
+                    decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                       icon: Icon(Icons.lock),
                       iconColor: Colors.black,
+                      suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() {
+                              passwordVisible = !passwordVisible;
+                            });
+                          },
+                          icon: Icon(passwordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off)),
                       border: OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.black)),
                       hintText: 'Password',

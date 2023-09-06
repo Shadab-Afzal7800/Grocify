@@ -15,6 +15,8 @@ TextEditingController createPassword = TextEditingController();
 TextEditingController confirmPassword = TextEditingController();
 
 class _CreateAccountState extends State<CreateAccount> {
+  bool createPasswordVisible = true;
+  bool confirmPasswordVisible = true;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -44,7 +46,7 @@ class _CreateAccountState extends State<CreateAccount> {
               padding: const EdgeInsets.all(20.0),
               child: TextFormField(
                 controller: createName,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                     icon: Icon(Icons.person),
@@ -72,11 +74,22 @@ class _CreateAccountState extends State<CreateAccount> {
               padding: const EdgeInsets.all(20.0),
               child: TextFormField(
                 controller: createPassword,
-                decoration: const InputDecoration(
+                obscureText: createPasswordVisible,
+                decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                     icon: Icon(Icons.lock),
                     iconColor: Colors.black,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          createPasswordVisible = !createPasswordVisible;
+                        });
+                      },
+                      icon: Icon(createPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                    ),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                     hintText: 'Password'),
@@ -85,12 +98,23 @@ class _CreateAccountState extends State<CreateAccount> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: TextFormField(
+                obscureText: confirmPasswordVisible,
                 controller: confirmPassword,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                     icon: Icon(Icons.check),
                     iconColor: Colors.black,
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          confirmPasswordVisible = !confirmPasswordVisible;
+                        });
+                      },
+                      icon: Icon(confirmPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                    ),
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black)),
                     hintText: 'Confirm Password'),
