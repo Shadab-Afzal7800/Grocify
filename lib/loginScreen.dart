@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:grocery_list_app/createAccount.dart';
 
 import 'listScreen.dart';
@@ -14,6 +15,30 @@ class Login extends StatefulWidget {
 
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
+
+void login(BuildContext context) async {
+  String emailLogin = emailController.text.trim();
+  String passwordLogin = passwordController.text;
+
+  if (emailLogin == '' || passwordLogin == '') {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Enter Valid Email and Password!')));
+  } else {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailLogin,
+        password: passwordLogin,
+      );
+
+      Navigator.popUntil(context, (route) => route.isFirst);
+      Navigator.pushReplacement(
+          context, CupertinoPageRoute(builder: (context) => MyHomeScreen()));
+    } on FirebaseAuthException catch (ex) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(ex.code.toString())));
+    }
+  }
+}
 
 class _LoginState extends State<Login> {
   bool passwordVisible = true;
@@ -132,28 +157,5 @@ class _LoginState extends State<Login> {
             ],
           )),
     );
-  }
-}
-
-void login(BuildContext context) async {
-  String emailLogin = emailController.text.trim();
-  String passwordLogin = passwordController.text;
-
-  if (emailLogin == '' || passwordLogin == '') {
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Enter Valid Email and Password!')));
-  } else {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: emailLogin, password: passwordLogin);
-
-      Navigator.popUntil(context, (route) => route.isFirst);
-      Navigator.pushReplacement(
-          context, CupertinoPageRoute(builder: (context) => MyHomeScreen()));
-    } on FirebaseAuthException catch (ex) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(ex.code.toString())));
-    }
   }
 }

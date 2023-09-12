@@ -1,3 +1,4 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,37 @@ TextEditingController createName = TextEditingController();
 TextEditingController createEmail = TextEditingController();
 TextEditingController createPassword = TextEditingController();
 TextEditingController confirmPassword = TextEditingController();
+
+void createAccount(BuildContext context) async {
+  String name = createName.text;
+  String email = createEmail.text;
+  String password = createPassword.text;
+  String cpassword = confirmPassword.text;
+
+  if (email == '' || password == '' || cpassword == '') {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Fields cannot be empty!')));
+  } else if (password != cpassword) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Passwords do not match!')));
+  } else {
+    try {
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
+      if (userCredential.user != null) {
+        Navigator.pop(context);
+      }
+    } on FirebaseAuthException catch (ex) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(ex.code.toString())));
+    }
+  }
+}
 
 class _CreateAccountState extends State<CreateAccount> {
   bool createPasswordVisible = true;
@@ -138,36 +170,5 @@ class _CreateAccountState extends State<CreateAccount> {
         ),
       ),
     );
-  }
-}
-
-void createAccount(BuildContext context) async {
-  String name = createName.text;
-  String email = createEmail.text;
-  String password = createPassword.text;
-  String cpassword = confirmPassword.text;
-
-  if (email == '' || password == '' || cpassword == '') {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Fields cannot be empty!')));
-  } else if (password != cpassword) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Passwords do not match!')));
-  } else {
-    try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      await FirebaseAuth.instance.currentUser!.updateDisplayName(name);
-      if (userCredential.user != null) {
-        Navigator.pop(context);
-      }
-    } on FirebaseAuthException catch (ex) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(ex.code.toString())));
-    }
   }
 }
